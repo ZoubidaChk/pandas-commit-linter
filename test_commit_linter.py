@@ -9,7 +9,7 @@ def test_lint_marks_valid_conventional_commit():
 
     result = frame.commit_lint.lint()
 
-    assert result.loc[0, "valid"] is True
+    assert result.loc[0, "valid"]
 
 
 def test_lint_marks_bad_type_invalid():
