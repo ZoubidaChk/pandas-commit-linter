@@ -30,9 +30,9 @@ class CommitLintAccessor:
         if max_subject_length < 1:
             raise ValueError("max_subject_length must be positive")
         messages = self._obj["message"].fillna("").astype(str).str.strip()
-        allowed = set(allowed_types)
+        allowed = {str(commit_type).strip().lower() for commit_type in allowed_types}
         pattern = re.compile(r"^(?P<type>[a-z]+)(?:\([^\n()]+\))?!?:\s+\S.+$")
-        parsed = messages.str.extract(pattern, expand=False)
+        parsed = messages.str.extract(pattern, expand=False).str.lower()
         result = pd.DataFrame(index=self._obj.index)
         result["message_present"] = messages.str.strip().ne("")
         result["subject_within_limit"] = messages.str.split("\n", n=1).str[0].str.len().le(max_subject_length)
