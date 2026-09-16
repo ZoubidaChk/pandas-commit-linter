@@ -8,8 +8,7 @@ from typing import Iterable
 import pandas as pd
 
 __version__ = "0.1.0"
-_DEFAULT_TYPES = ("feat", "fix", "docs", "refactor", "test", "chore", "build", "ci", "perf", "revert")
-
+DEFAULT_TYPES = ("feat", "fix", "docs", "refactor", "test", "chore", "build", "ci", "perf", "revert")
 
 @pd.api.extensions.register_dataframe_accessor("commit_lint")
 class CommitLintAccessor:
@@ -25,7 +24,7 @@ class CommitLintAccessor:
         *,
         max_subject_length: int = 72,
         require_conventional_type: bool = True,
-        allowed_types: Iterable[str] = _DEFAULT_TYPES,
+        allowed_types: Iterable[str] = DEFAULT_TYPES,
     ) -> pd.DataFrame:
         """Return per-row lint results without modifying the source DataFrame."""
         if max_subject_length < 1:
