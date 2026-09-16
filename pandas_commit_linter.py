@@ -44,6 +44,11 @@ class CommitLintAccessor:
         result["failure_count"] = (~result.drop(columns="valid")).sum(axis=1)
         return result
 
+    def summary(self, **kwargs: object) -> pd.Series:
+        """Return aggregate counts useful for a quick repository overview."""
+        results = self.lint(**kwargs)
+        return pd.Series({"total": len(results), "valid": int(results["valid"].sum()), "invalid": int((~results["valid"]).sum())})
+
     def invalid(self, **kwargs: object) -> pd.DataFrame:
         """Return source rows whose messages fail one or more lint rules."""
         results = self.lint(**kwargs)
