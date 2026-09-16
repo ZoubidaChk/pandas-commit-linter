@@ -41,6 +41,7 @@ class CommitLintAccessor:
         if not require_conventional_type:
             result["allowed_type"] = True
         result["valid"] = result.all(axis=1)
+        result["failure_count"] = (~result.drop(columns="valid")).sum(axis=1)
         return result
 
     def invalid(self, **kwargs: object) -> pd.DataFrame:
