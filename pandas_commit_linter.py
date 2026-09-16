@@ -27,10 +27,14 @@ class CommitLintAccessor:
         allowed_types: Iterable[str] = DEFAULT_TYPES,
     ) -> pd.DataFrame:
         """Return per-row lint results without modifying the source DataFrame."""
+        if not isinstance(max_subject_length, int) or isinstance(max_subject_length, bool):
+            raise TypeError("max_subject_length must be an integer")
         if max_subject_length < 1:
             raise ValueError("max_subject_length must be positive")
         messages = self._obj["message"].fillna("").astype(str).str.strip()
         allowed = {str(commit_type).strip().lower() for commit_type in allowed_types}
+        if not allowed and require_conventional_type:
+            raise ValueError("allowed_types must not be empty when conventional types are required")
         pattern = re.compile(r"^(?P<type>[a-z]+)(?:\([^\n()]+\))?!?:\s+\S.+$")
         parsed = messages.str.extract(pattern, expand=False).str.lower()
         result = pd.DataFrame(index=self._obj.index)
